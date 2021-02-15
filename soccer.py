@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 import json
 
+
 url = "https://www.soccerstats.com/"
 driver = webdriver.Firefox()
 
@@ -36,17 +37,15 @@ for a in  soup.find_all("a", class_="vsmall"):
 
 # Generating URL table
 url_table_matches = []
-for i in range(0,count):
+for i in range(0, count):
     url_table_matches.insert(i, url + href_table_matches[i])
-
-print(url_table_matches[0])
-print(url_table_matches[1])
+    print(url_table_matches[i])
 
 
 #!- Getting each match statistics -!#
-for i in range(0, count):
-    driver.get(url_table_matches[i])
-    time.sleep(1)
-    driver.quit()
+#for i in range(0, count):
+#    driver.get(str(url_table_matches[i]))
+#    time.sleep(1)
+#    driver.quit()
 
 driver.quit()
