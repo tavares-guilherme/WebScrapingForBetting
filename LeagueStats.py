@@ -48,24 +48,21 @@ class LeagueStats:
         # Generating URL table
         for i in range(0, self.num_matches):
             self.next_matches_urls.insert(i, self.sourceURL + href_table_matches[i])
-            print(self.next_matches_urls[i])
 
         driver.quit()
 
     def percent_to_float(self, s):
         s = s[:-1]
         s = float(s)
+        s = s/100
 
         return s
 
     def gen_stats(self):
-        # TO-DO
-        print("Generating stats...")
-    
+        # Get game stats
+        
         for i in range(0, self.num_matches):
-
             # Debug
-            print("Accessing match ", i)
             tmp_match = match()
 
             driver = webdriver.Firefox()
@@ -75,7 +72,11 @@ class LeagueStats:
             # Accepting Cookies
             driver.find_element_by_css_selector(".css-flk0bs").click()
             time.sleep(1)
-            print("Accepted Cookies")
+
+        #== Getting Team Names
+            
+          
+            
 
         #== Getting Games Played
 
@@ -93,15 +94,12 @@ class LeagueStats:
             np.delete(aux_b, 0, 1)
 
             tmp_match.games_played_a = []
-            tmp_match.games_played_a.insert(0, aux_a[1][1])
-            tmp_match.games_played_a.insert(0, aux_a[2][1])
+            tmp_match.games_played_a.insert(0, int(aux_a[2][1]))
+            tmp_match.games_played_a.insert(0, int(aux_a[1][1]))
 
             tmp_match.games_played_b = []
-            tmp_match.games_played_b.insert(0, aux_b[1][1])
-            tmp_match.games_played_b.insert(0, aux_b[2][1])
-
-            print("A: ", tmp_match.games_played_a)
-            print("B: ", tmp_match.games_played_b)
+            tmp_match.games_played_b.insert(0, int(aux_b[2][1]))
+            tmp_match.games_played_b.insert(0, int(aux_b[1][1]))
             
         #==
 
@@ -137,6 +135,14 @@ class LeagueStats:
             tmp_match.goals_table_b = tmp_b
 
             #Convert str to float
+            for j in range(1, 6):
+                tmp_match.goals_table_a[j][0] = float(tmp_match.goals_table_a[j][0])
+                tmp_match.goals_table_a[j][1] = float(tmp_match.goals_table_a[j][1])
+
+
+                tmp_match.goals_table_b[j][0] = float(tmp_match.goals_table_b[j][0])
+                tmp_match.goals_table_b[j][1] = float(tmp_match.goals_table_b[j][1])
+
             for j in range(6, 14):
                 tmp_match.goals_table_a[j][0] = self.percent_to_float(tmp_match.goals_table_a[j][0])
                 tmp_match.goals_table_a[j][1] = self.percent_to_float(tmp_match.goals_table_a[j][1])
@@ -144,13 +150,10 @@ class LeagueStats:
 
                 tmp_match.goals_table_b[j][0] = self.percent_to_float(tmp_match.goals_table_b[j][0])
                 tmp_match.goals_table_b[j][1] = self.percent_to_float(tmp_match.goals_table_b[j][1])
-
-            print("A: ", tmp_match.goals_table_a)
-            print("B: ", tmp_match.goals_table_b)
             
         #====
             driver.quit()
-            self.match_list.insert(0, tmp_match)
+            self.match_list.append(tmp_match)
             del tmp_match
 
     def __init__(self, id):
